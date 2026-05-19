@@ -1,0 +1,79 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text="Inicio"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Categorías</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="addCategory()" fill="solid" color="primary" class="add-btn">
+        <ion-icon name="add" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="cat-content">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Categorías</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  @if (categories.length === 0) {
+    <div class="empty-state">
+      <ion-icon name="pricetags-outline"></ion-icon>
+      <h3>Sin categorías</h3>
+      <p>Organiza tus tareas creando categorías personalizadas</p>
+      <ion-button (click)="addCategory()" expand="block" class="empty-btn">
+        <ion-icon name="add" slot="start"></ion-icon>
+        Crear primera categoría
+      </ion-button>
+    </div>
+  }
+
+  <ion-list class="cat-list" lines="none">
+    @for (cat of categories; track trackByCatId($index, cat)) {
+      <ion-item-sliding>
+        <ion-item class="cat-item" detail="false">
+          <div slot="start" class="cat-icon-wrap" [style.background]="cat.color + '22'">
+            <ion-icon [name]="cat.icon" [style.color]="cat.color"></ion-icon>
+          </div>
+
+          <ion-label>
+            <div class="cat-name">{{ cat.name }}</div>
+            <div class="cat-count">
+              {{ getTaskCountForCategory(cat.id) }} tarea(s)
+            </div>
+          </ion-label>
+
+          <div slot="end" class="cat-actions">
+            <ion-button fill="clear" size="small" (click)="editCategory(cat)">
+              <ion-icon name="create-outline" slot="icon-only" [style.color]="cat.color"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" size="small" color="danger" (click)="deleteCategory(cat)">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </div>
+
+          <!-- Color accent bar -->
+          <div class="cat-accent" [style.background]="cat.color"></div>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="primary" (click)="editCategory(cat)" expandable>
+            <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="danger" (click)="deleteCategory(cat)">
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    }
+  </ion-list>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="addCategory()" color="primary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
